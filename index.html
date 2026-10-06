@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ikhlas School Manager — Simple Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@500;700&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#F6F3EC; --surface:#FFFFFF; --ink:#1B2A3A; --muted:#5B6877; --line:#D9D3C4;
+  --navy:#1F3B57; --navy-soft:#E3EBF3; --gold:#E09F2E; --gold-soft:#FBEFD6;
+  --green:#2F7D4F; --green-soft:#DDF0E4; --red:#B4412F; --red-soft:#F8E1DC; --blue:#2D6CA3;
+  --serif:'Lora',Georgia,'Times New Roman',serif; --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121A23; --surface:#1A2531; --ink:#E8EDF2; --muted:#9AA8B6; --line:#2C3A49;
+    --navy:#7FB0E0; --navy-soft:#223446; --gold:#F0B450; --gold-soft:#3A3020;
+    --green:#6CC594; --green-soft:#1E3529; --red:#EE8B79; --red-soft:#3C2420; --blue:#7FB0E0;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121A23; --surface:#1A2531; --ink:#E8EDF2; --muted:#9AA8B6; --line:#2C3A49;
+  --navy:#7FB0E0; --navy-soft:#223446; --gold:#F0B450; --gold-soft:#3A3020;
+  --green:#6CC594; --green-soft:#1E3529; --red:#EE8B79; --red-soft:#3C2420; --blue:#7FB0E0;
+}
+html{scroll-padding-top:calc(64px + env(safe-area-inset-top,0px));scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.65}
+h1,h2,h3{font-family:var(--serif);line-height:1.2;margin:0}
+h2{font-size:clamp(26px,4vw,34px);color:var(--navy);margin-bottom:6px}
+h3{font-size:21px;margin:28px 0 8px}
+p{margin:0 0 14px;max-width:68ch}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+nav.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--navy);overflow-x:auto;white-space:nowrap}
+nav.top .wrap{display:flex;gap:4px;padding:10px 20px}
+nav.top a{color:#fff;text-decoration:none;font-size:14px;font-weight:500;padding:6px 12px;border-radius:999px;opacity:.9}
+nav.top a:hover{background:rgba(255,255,255,.15)}
+:root[data-theme="dark"] nav.top{background:#0C1219}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) nav.top{background:#0C1219}}
+header.hero{background:var(--navy);color:#fff;padding:56px 0 0;position:relative}
+:root[data-theme="dark"] header.hero{background:#16222F}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) header.hero{background:#16222F}}
+.hero .wrap{display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;padding-bottom:48px}
+.hero h1{font-size:clamp(34px,6vw,54px);color:#fff}
+.hero p{color:#D5E0EB;font-size:19px;margin-top:14px}
+.hero .mark{width:140px;height:140px;border-radius:24px;background:#1F3B57;border:3px solid rgba(255,255,255,.25);display:flex;flex-direction:column;justify-content:center;align-items:center;font-family:var(--serif);font-weight:700;font-size:62px;color:#fff;position:relative;overflow:hidden}
+.hero .mark::after{content:"";position:absolute;left:0;right:0;bottom:0;height:12px;background:#E09F2E}
+.hero .gold{height:8px;background:#E09F2E}
+@media(max-width:640px){.hero .wrap{grid-template-columns:1fr}.hero .mark{width:96px;height:96px;font-size:42px}}
+section{padding:52px 0 8px;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+.lead{font-size:19px;color:var(--muted);margin-bottom:22px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:16px 0}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:760px){.g2,.g3{grid-template-columns:1fr}}
+.card.navy{border-left:6px solid var(--navy)} .card.gold{border-left:6px solid var(--gold)} .card.green{border-left:6px solid var(--green)} .card.red{border-left:6px solid var(--red)}
+.card h3{margin-top:0;font-size:20px}
+.tag{display:inline-block;font-size:13px;font-weight:600;padding:2px 10px;border-radius:999px;background:var(--navy-soft);color:var(--navy)}
+.tag.gold{background:var(--gold-soft);color:#8A5A00}
+:root[data-theme="dark"] .tag.gold{color:var(--gold)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tag.gold{color:var(--gold)}}
+.tag.green{background:var(--green-soft);color:var(--green)} .tag.red{background:var(--red-soft);color:var(--red)}
+figure{margin:20px 0;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;overflow-x:auto}
+figure svg{display:block;width:100%;height:auto;min-width:560px}
+figcaption{font-size:14px;color:var(--muted);padding:8px 6px 0}
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .t-s{font-size:13px} svg .t-m{font-size:15px;font-weight:600} svg .t-l{font-size:18px;font-weight:700;font-family:var(--serif)}
+svg .muted{fill:var(--muted)}
+svg .box{fill:var(--surface);stroke:var(--navy);stroke-width:2}
+svg .box-n{fill:var(--navy);stroke:var(--navy)} svg .box-n text{fill:#fff}
+svg .box-g{fill:var(--gold-soft);stroke:var(--gold);stroke-width:2}
+svg .box-gr{fill:var(--green-soft);stroke:var(--green);stroke-width:2}
+svg .box-r{fill:var(--red-soft);stroke:var(--red);stroke-width:2}
+svg .box-b{fill:var(--navy-soft);stroke:var(--navy);stroke-width:2}
+svg .arrow{stroke:var(--ink);stroke-width:2;fill:none}
+svg .dash{stroke-dasharray:6 5}
+svg .ah{fill:var(--ink)}
+svg .white{fill:#fff}
+table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:16px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:center}
+th:first-child,td:first-child{text-align:left}
+th{background:var(--navy);color:#fff;font-weight:600}
+:root[data-theme="dark"] th{background:#0C1219}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) th{background:#0C1219}}
+td.y{color:var(--green);font-weight:700;font-size:20px} td.n{color:var(--red);font-weight:700;font-size:20px} td.p{color:#8A5A00;font-weight:600;font-size:14px}
+:root[data-theme="dark"] td.p{color:var(--gold)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) td.p{color:var(--gold)}}
+.tablewrap{overflow-x:auto}
+ol.steps{counter-reset:s;list-style:none;padding:0;margin:12px 0}
+ol.steps li{counter-increment:s;position:relative;padding:8px 0 8px 48px;margin:0}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:6px;width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:15px}
+:root[data-theme="dark"] ol.steps li::before{color:#0C1219}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) ol.steps li::before{color:#0C1219}}
+ul.tick{list-style:none;padding:0;margin:8px 0}
+ul.tick li{padding:4px 0 4px 28px;position:relative}
+ul.tick li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:700}
+ul.cross li::before{content:"✗";color:var(--red)}
+.note{background:var(--gold-soft);border:1px solid var(--gold);border-radius:12px;padding:14px 18px;margin:18px 0}
+.note b{color:inherit}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.pill-row{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-weight:600}
+details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 18px;margin:10px 0}
+summary{cursor:pointer;font-weight:600}
+details p{margin:10px 0 2px}
+footer{padding:36px 0 56px;color:var(--muted);font-size:14px;text-align:center}
+.printbtn{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--gold);color:#1B2A3A;border:0;border-radius:999px;padding:12px 18px;font-weight:600;font-family:var(--sans);font-size:15px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+@media print{
+  nav.top,.printbtn{display:none}
+  body{background:#fff;font-size:14px}
+  section{break-inside:auto;padding-top:28px}
+  figure,.card,details{break-inside:avoid}
+  details{display:block}
+  header.hero{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <h1>Ikhlas School Manager</h1>
+      <p>A simple guide for our teachers, fee collector and management. It explains what the software does, who uses which part, and how information travels between the school and the parents.</p>
+    </div>
+    <div class="mark" aria-hidden="true">IS</div>
+  </div>
+  <div class="gold"></div>
+</header>
+
+<nav class="top"><div class="wrap">
+  <a href="#idea">The idea</a><a href="#roles">Who does what</a><a href="#teacher">Teachers</a><a href="#fees">Fee collector</a><a href="#mgmt">Management</a><a href="#alerts">Alerts</a><a href="#parents">Parent Portal</a><a href="#pictures">Pictures &amp; graphs</a><a href="#safe">Staying safe</a><a href="#faq">Questions</a>
+</div></nav>
+
+<main class="wrap">
+
+<!-- ============ 1. THE IDEA ============ -->
+<section id="idea">
+  <h2>1. What is this software?</h2>
+  <p class="lead">Think of it as a <b>digital school register + fee book + cash book</b> that lives on a phone or computer, so nobody has to search through paper files.</p>
+
+  <div class="grid g3">
+    <div class="card navy"><h3>Before (paper)</h3><p>Admission register, fee register, receipt book and cash book. Hard to search, easy to lose, and the totals must be added by hand.</p></div>
+    <div class="card gold"><h3>Now (this software)</h3><p>Type a name or admission number and the student appears. Payments are added, balances are worked out automatically, and receipts print in one click.</p></div>
+    <div class="card green"><h3>For parents</h3><p>A separate small app where parents see only <i>their own child's</i> fees, payments and school notices.</p></div>
+  </div>
+
+  <h3>The three parts of the system</h3>
+  <figure>
+    <svg viewBox="0 0 900 360" role="img" aria-label="Diagram: staff app, shared cloud storage, and parent portal connected by arrows">
+      <defs><marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ah"/></marker></defs>
+      <!-- staff app -->
+      <rect x="20" y="40" width="250" height="250" rx="16" class="box-b"/>
+      <text x="145" y="72" text-anchor="middle" class="t-l">1. Staff App</text>
+      <text x="145" y="94" text-anchor="middle" class="t-s muted">Ikhlas School Manager</text>
+      <g transform="translate(50,112)">
+        <circle cx="22" cy="18" r="12" class="box"/><path d="M4 56c0-12 8-20 18-20s18 8 18 20z" class="box"/>
+        <text x="22" y="76" text-anchor="middle" class="t-s">Teacher</text>
+      </g>
+      <g transform="translate(125,112)">
+        <circle cx="22" cy="18" r="12" class="box-g"/><path d="M4 56c0-12 8-20 18-20s18 8 18 20z" class="box-g"/>
+        <text x="22" y="76" text-anchor="middle" class="t-s">Fee collector</text>
+      </g>
+      <g transform="translate(200,112)">
+        <circle cx="22" cy="18" r="12" class="box-n"/><path d="M4 56c0-12 8-20 18-20s18 8 18 20z" class="box-n"/>
+        <text x="22" y="76" text-anchor="middle" class="t-s">Management</text>
+      </g>
+      <text x="145" y="230" text-anchor="middle" class="t-s">Students · Fees · Payments</text>
+      <text x="145" y="250" text-anchor="middle" class="t-s">Accounts · Reports · Alerts</text>
+      <text x="145" y="270" text-anchor="middle" class="t-s">Messages to parents</text>
+      <!-- cloud -->
+      <path d="M330 150c-26 0-40-20-30-38 8-16 30-20 44-10 8-26 44-34 64-14 14-18 52-10 56 18 28-4 44 24 28 42-6 6-12 8-20 8z" class="box-g" transform="translate(70,10)"/>
+      <text x="450" y="132" text-anchor="middle" class="t-l">2. Shared Cloud</text>
+      <text x="450" y="154" text-anchor="middle" class="t-s muted">(Firebase – free Google service)</text>
+      <text x="450" y="206" text-anchor="middle" class="t-s">One safe copy of all school data</text>
+      <text x="450" y="226" text-anchor="middle" class="t-s">Every phone &amp; computer sees</text>
+      <text x="450" y="246" text-anchor="middle" class="t-s">the same up-to-date information</text>
+      <!-- parent -->
+      <rect x="630" y="40" width="250" height="250" rx="16" class="box-gr"/>
+      <text x="755" y="72" text-anchor="middle" class="t-l">3. Parent Portal</text>
+      <text x="755" y="94" text-anchor="middle" class="t-s muted">Separate, read-only app</text>
+      <g transform="translate(715,112)">
+        <rect x="0" y="0" width="80" height="120" rx="12" class="box"/><rect x="8" y="14" width="64" height="8" rx="3" class="box-g"/>
+        <rect x="8" y="30" width="64" height="8" rx="3" class="box-b"/><rect x="8" y="46" width="44" height="8" rx="3" class="box-b"/>
+        <rect x="8" y="66" width="64" height="26" rx="5" class="box-gr"/><text x="40" y="84" text-anchor="middle" class="t-s">Paid ✓</text>
+        <circle cx="40" cy="106" r="4" class="box"/>
+      </g>
+      <text x="755" y="262" text-anchor="middle" class="t-s">Fees · Payments · Notices</text>
+      <!-- arrows -->
+      <line x1="272" y1="190" x2="330" y2="190" class="arrow" marker-end="url(#a1)" marker-start="url(#a1)"/>
+      <line x1="568" y1="190" x2="628" y2="190" class="arrow" marker-end="url(#a1)"/>
+      <text x="300" y="178" text-anchor="middle" class="t-s">save</text>
+      <text x="598" y="178" text-anchor="middle" class="t-s">read</text>
+      <text x="450" y="330" text-anchor="middle" class="t-s muted">Staff can write and read. Parents can only read their own child's page.</text>
+    </svg>
+    <figcaption>Staff enter information once. The cloud keeps one shared copy. Parents read only a small, safe summary about their own child.</figcaption>
+  </figure>
+
+  <div class="note"><b>Why the cloud matters:</b> without it, every phone or computer keeps its <i>own separate</i> copy, so a payment entered on the office computer would not appear on the principal's phone. With cloud sync <b>on</b> (it is switched on for our school), everyone sees the same live data. The sidebar shows a green <span class="tag green">Cloud sync on</span> badge when it is working.</div>
+
+  <h3>Works on a phone, like an app</h3>
+  <p>Open the school link in Chrome on an Android phone, tap the menu (⋮) and choose <b>Install app</b>. The school's blue-and-gold <b>IS</b> icon is added to the home screen and the software opens full-screen, like any other app.</p>
+</section>
+
+<!-- ============ 2. ROLES ============ -->
+<section id="roles">
+  <h2>2. Who can do what?</h2>
+  <p class="lead">When the software opens, you choose one of three doors. Each door shows only the tabs that person needs.</p>
+
+  <figure>
+    <svg viewBox="0 0 900 250" role="img" aria-label="Login screen with three doors: teacher, fee payments, management">
+      <defs><marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ah"/></marker></defs>
+      <rect x="20" y="20" width="200" height="210" rx="14" class="box-n"/>
+      <rect x="40" y="38" width="44" height="44" rx="8" fill="#1F3B57" stroke="#fff" stroke-width="2"/><rect x="40" y="76" width="44" height="6" fill="#E09F2E"/>
+      <text x="62" y="68" text-anchor="middle" class="white t-m">IS</text>
+      <text x="120" y="66" class="white t-m">Login</text>
+      <rect x="40" y="100" width="160" height="34" rx="8" fill="#fff"/><text x="120" y="122" text-anchor="middle" class="t-s" style="fill:#1B2A3A">Teacher</text>
+      <rect x="40" y="144" width="160" height="34" rx="8" fill="#fff"/><text x="120" y="166" text-anchor="middle" class="t-s" style="fill:#1B2A3A">Fee Payments</text>
+      <rect x="40" y="188" width="160" height="34" rx="8" fill="#E09F2E"/><text x="120" y="210" text-anchor="middle" class="t-s" style="fill:#1B2A3A">Management</text>
+      <line x1="222" y1="117" x2="300" y2="70" class="arrow" marker-end="url(#a2)"/>
+      <line x1="222" y1="161" x2="300" y2="140" class="arrow" marker-end="url(#a2)"/>
+      <line x1="222" y1="205" x2="300" y2="205" class="arrow" marker-end="url(#a2)"/>
+      <rect x="302" y="30" width="578" height="64" rx="12" class="box"/><text x="318" y="56" class="t-m">Teacher — no password</text><text x="318" y="78" class="t-s muted">Dashboard · Students (add &amp; look up) · Reports (class list)</text>
+      <rect x="302" y="108" width="578" height="64" rx="12" class="box-g"/><text x="318" y="134" class="t-m">Fee Payments — password</text><text x="318" y="156" class="t-s muted">Students (look up only) · Payments (record money, print receipt)</text>
+      <rect x="302" y="186" width="578" height="46" rx="12" class="box-b"/><text x="318" y="215" class="t-m">Management — password · everything, including Fees, Accounts, Notifications &amp; Settings</text>
+    </svg>
+    <figcaption>One software, three doors. Staff who see fewer tabs cannot accidentally change important records.</figcaption>
+  </figure>
+
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Task</th><th>Teacher</th><th>Fee collector</th><th>Management</th></tr></thead>
+    <tbody>
+      <tr><td>Add a new student</td><td class="y">✓</td><td class="n">✗</td><td class="y">✓</td></tr>
+      <tr><td>Look up a student</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+      <tr><td>Edit or delete a student</td><td class="n">✗</td><td class="n">✗</td><td class="y">✓</td></tr>
+      <tr><td>Print class-list report</td><td class="y">✓</td><td class="n">✗</td><td class="y">✓</td></tr>
+      <tr><td>Set up fees &amp; discounts</td><td class="n">✗</td><td class="n">✗</td><td class="y">✓</td></tr>
+      <tr><td>Record a fee payment &amp; print receipt</td><td class="n">✗</td><td class="y">✓</td><td class="y">✓</td></tr>
+      <tr><td>Edit or delete a payment</td><td class="n">✗</td><td class="n">✗</td><td class="y">✓</td></tr>
+      <tr><td>Accounts (income &amp; expenses)</td><td class="n">✗</td><td class="n">✗</td><td class="y">✓</td></tr>
+      <tr><td>Alerts &amp; Notifications to parents</td><td class="n">✗</td><td class="n">✗</td><td class="y">✓</td></tr>
+      <tr><td>Settings, passwords &amp; backup</td><td class="n">✗</td><td class="n">✗</td><td class="y">✓</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="legend" style="margin-top:10px"><span>✓ allowed</span><span>✗ not shown / not allowed</span></p>
+  <div class="note"><b>Passwords:</b> the Fee Payments and Management passwords are given to you by the school office. When the software is first installed it comes with <i>starting</i> passwords — Management must change them in <b>Settings</b> and never share them outside the staff who need them.</div>
+</section>
+
+<!-- ============ 3. TEACHERS ============ -->
+<section id="teacher">
+  <h2>3. For Teachers</h2>
+  <p class="lead">Your job in the software is simple: add new students correctly, and look up a child's details when you need them.</p>
+
+  <h3>Adding a new student</h3>
+  <figure>
+    <svg viewBox="0 0 900 150" role="img" aria-label="Flow: open software, Teacher, Students tab, Add student, fill form, Save">
+      <defs><marker id="a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ah"/></marker></defs>
+      <g>
+        <rect x="10" y="30" width="125" height="80" rx="12" class="box-b"/><text x="72" y="64" text-anchor="middle" class="t-m">Open</text><text x="72" y="84" text-anchor="middle" class="t-s">the software</text>
+        <rect x="165" y="30" width="125" height="80" rx="12" class="box-b"/><text x="227" y="64" text-anchor="middle" class="t-m">Continue as</text><text x="227" y="84" text-anchor="middle" class="t-m">teacher</text>
+        <rect x="320" y="30" width="125" height="80" rx="12" class="box-b"/><text x="382" y="64" text-anchor="middle" class="t-m">Students</text><text x="382" y="84" text-anchor="middle" class="t-s">tab → Add</text>
+        <rect x="475" y="30" width="145" height="80" rx="12" class="box-g"/><text x="547" y="58" text-anchor="middle" class="t-m">Fill the form</text><text x="547" y="78" text-anchor="middle" class="t-s">name, class, DOB,</text><text x="547" y="94" text-anchor="middle" class="t-s">parents, phone</text>
+        <rect x="650" y="30" width="105" height="80" rx="12" class="box-gr"/><text x="702" y="64" text-anchor="middle" class="t-m">Save</text><text x="702" y="84" text-anchor="middle" class="t-s">✓ done</text>
+        <rect x="780" y="30" width="110" height="80" rx="12" class="box"/><text x="835" y="58" text-anchor="middle" class="t-m">Management</text><text x="835" y="78" text-anchor="middle" class="t-s">gets an</text><text x="835" y="94" text-anchor="middle" class="t-s">alert</text>
+        <line x1="136" y1="70" x2="162" y2="70" class="arrow" marker-end="url(#a3)"/>
+        <line x1="291" y1="70" x2="317" y2="70" class="arrow" marker-end="url(#a3)"/>
+        <line x1="446" y1="70" x2="472" y2="70" class="arrow" marker-end="url(#a3)"/>
+        <line x1="621" y1="70" x2="647" y2="70" class="arrow" marker-end="url(#a3)"/>
+        <line x1="756" y1="70" x2="777" y2="70" class="arrow dash" marker-end="url(#a3)"/>
+      </g>
+    </svg>
+    <figcaption>Adding a student takes about a minute. Management is notified automatically.</figcaption>
+  </figure>
+
+  <div class="grid g2">
+    <div class="card navy">
+      <h3>Every student has…</h3>
+      <ul class="tick">
+        <li>A unique <b>Admission Number</b> (like an ID — never repeated)</li>
+        <li>Name, class, date of birth, phone, address</li>
+        <li>Father's and mother's names</li>
+        <li>Aadhaar numbers (optional, must be exactly 12 digits)</li>
+      </ul>
+    </div>
+    <div class="card gold">
+      <h3>Tips for teachers</h3>
+      <ul class="tick">
+        <li>Type just a few letters of a name or number in the search box to find a child.</li>
+        <li><b>Always enter the date of birth.</b> Parents need it to log into the Parent Portal.</li>
+        <li>Made a mistake? Tell Management — only they can edit or delete a student.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Class list</h3>
+  <p>In <b>Reports</b> you can see a class-wise list of students and press <b>Print</b>. The printout has the school logo and name at the top, ready to put on the notice board or in a file.</p>
+</section>
+
+<!-- ============ 4. FEE COLLECTOR ============ -->
+<section id="fees">
+  <h2>4. For the Fee Collector</h2>
+  <p class="lead">You use the <b>Fee Payments</b> door. You see two tabs only: <b>Students</b> and <b>Payments</b>.</p>
+
+  <h3>Taking a fee from a parent</h3>
+  <figure>
+    <svg viewBox="0 0 900 470" role="img" aria-label="Flowchart for recording a fee payment, including receipt and WhatsApp message">
+      <defs><marker id="a4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ah"/></marker></defs>
+      <rect x="320" y="10" width="260" height="46" rx="23" class="box-n"/><text x="450" y="39" text-anchor="middle" class="t-m">Parent comes to pay</text>
+      <line x1="450" y1="57" x2="450" y2="82" class="arrow" marker-end="url(#a4)"/>
+      <rect x="300" y="84" width="300" height="52" rx="10" class="box-b"/><text x="450" y="106" text-anchor="middle" class="t-m">Log in → Fee Payments</text><text x="450" y="124" text-anchor="middle" class="t-s muted">(enter the fee password)</text>
+      <line x1="450" y1="137" x2="450" y2="160" class="arrow" marker-end="url(#a4)"/>
+      <rect x="300" y="162" width="300" height="52" rx="10" class="box-b"/><text x="450" y="184" text-anchor="middle" class="t-m">Payments → Record payment</text><text x="450" y="202" text-anchor="middle" class="t-s muted">type name or admission no.</text>
+      <line x1="450" y1="215" x2="450" y2="236" class="arrow" marker-end="url(#a4)"/>
+      <!-- decision -->
+      <path d="M450 238 L560 276 L450 314 L340 276 Z" class="box-g"/><text x="450" y="274" text-anchor="middle" class="t-s">Student</text><text x="450" y="290" text-anchor="middle" class="t-s">found?</text>
+      <line x1="340" y1="276" x2="240" y2="276" class="arrow" marker-end="url(#a4)"/><text x="290" y="266" text-anchor="middle" class="t-s">No</text>
+      <rect x="40" y="248" width="200" height="56" rx="10" class="box-r"/><text x="140" y="272" text-anchor="middle" class="t-s">Ask Management to</text><text x="140" y="290" text-anchor="middle" class="t-s">add the student / fee</text>
+      <line x1="450" y1="314" x2="450" y2="340" class="arrow" marker-end="url(#a4)"/><text x="468" y="332" class="t-s">Yes</text>
+      <rect x="260" y="342" width="380" height="52" rx="10" class="box-b"/><text x="450" y="364" text-anchor="middle" class="t-m">Pick the fee, enter amount &amp; method</text><text x="450" y="382" text-anchor="middle" class="t-s muted">cash / UPI / etc. → Save</text>
+      <line x1="450" y1="395" x2="450" y2="416" class="arrow" marker-end="url(#a4)"/>
+      <rect x="300" y="418" width="300" height="44" rx="10" class="box-gr"/><text x="450" y="446" text-anchor="middle" class="t-m">Balance updates by itself ✓</text>
+      <!-- right side outputs -->
+      <line x1="600" y1="444" x2="660" y2="444" class="arrow dash" marker-end="url(#a4)"/>
+      <rect x="662" y="340" width="226" height="52" rx="10" class="box"/><text x="775" y="364" text-anchor="middle" class="t-m">🖨 Print receipt</text><text x="775" y="382" text-anchor="middle" class="t-s muted">logo, stamp &amp; signature space</text>
+      <rect x="662" y="404" width="226" height="52" rx="10" class="box"/><text x="775" y="428" text-anchor="middle" class="t-m">💬 WhatsApp / SMS</text><text x="775" y="446" text-anchor="middle" class="t-s muted">confirmation to the parent</text>
+    </svg>
+    <figcaption>Search → choose the fee → save. The software does the arithmetic; you hand over the receipt.</figcaption>
+  </figure>
+
+  <div class="grid g2">
+    <div class="card green">
+      <h3>What the software does for you</h3>
+      <ul class="tick">
+        <li>Subtracts the discount and shows the <b>net fee</b>.</li>
+        <li>Adds every payment already made.</li>
+        <li>Shows the <b>balance still due</b> instantly.</li>
+        <li>Marks the fee <span class="tag red">Pending</span>, <span class="tag gold">Partial</span> or <span class="tag green">Paid</span>.</li>
+      </ul>
+    </div>
+    <div class="card gold">
+      <h3>About WhatsApp &amp; SMS</h3>
+      <p>After you save a payment, the software asks if you want to message the parent. If you say yes, WhatsApp (or the SMS app) opens with the message <b>already typed</b>. <b>You must still press the Send button yourself.</b> This costs nothing, but it is not automatic.</p>
+      <p style="margin:0">The student needs a phone number on file for this to work.</p>
+    </div>
+  </div>
+
+  <div class="note"><b>Made a wrong entry?</b> Fee collectors cannot edit or delete a payment (this protects the money records). Tell Management immediately — they can correct it, and the software will record an alert that a payment was changed.</div>
+</section>
+
+<!-- ============ 5. MANAGEMENT ============ -->
+<section id="mgmt">
+  <h2>5. For Management</h2>
+  <p class="lead">You see every tab. Here is a map of what each one is for.</p>
+
+  <figure>
+    <svg viewBox="0 0 900 400" role="img" aria-label="Sidebar of the software with each tab and its purpose">
+      <rect x="10" y="10" width="190" height="380" rx="14" class="box-n"/>
+      <text x="105" y="42" text-anchor="middle" class="white t-m">Ikhlas School</text>
+      <g class="t-s">
+        <rect x="22" y="58" width="166" height="32" rx="8" fill="rgba(255,255,255,.18)"/><text x="40" y="79" class="white">▦  Dashboard</text>
+        <text x="40" y="115" class="white">👥  Students</text>
+        <text x="40" y="149" class="white">🧾  Fees</text>
+        <text x="40" y="183" class="white">💵  Payments</text>
+        <text x="40" y="217" class="white">📒  Accounts</text>
+        <text x="40" y="251" class="white">📊  Reports</text>
+        <text x="40" y="285" class="white">🔔  Notifications</text>
+        <text x="40" y="319" class="white">⚙  Settings</text>
+      </g>
+      <text x="105" y="372" text-anchor="middle" class="t-s" style="fill:#7FD3A0">● Cloud sync on</text>
+      <g class="t-s">
+        <line x1="205" y1="74" x2="250" y2="74" class="arrow dash"/><text x="258" y="79" class="t-s"><tspan class="t-m">Dashboard</tspan> — quick overview + 🔔 bell for recent activity (Alerts)</text>
+        <line x1="205" y1="110" x2="250" y2="110" class="arrow dash"/><text x="258" y="115"><tspan class="t-m">Students</tspan> — add, edit, search, profile page, send announcements</text>
+        <line x1="205" y1="144" x2="250" y2="144" class="arrow dash"/><text x="258" y="149"><tspan class="t-m">Fees</tspan> — create fee records: Tuition, Transport, Hostel, Exam, Other</text>
+        <line x1="205" y1="178" x2="250" y2="178" class="arrow dash"/><text x="258" y="183"><tspan class="t-m">Payments</tspan> — every payment, receipts, WhatsApp / SMS</text>
+        <line x1="205" y1="212" x2="250" y2="212" class="arrow dash"/><text x="258" y="217"><tspan class="t-m">Accounts</tspan> — income (from fees) and expenses, net balance</text>
+        <line x1="205" y1="246" x2="250" y2="246" class="arrow dash"/><text x="258" y="251"><tspan class="t-m">Reports</tspan> — pending fees, collection, discounts, class lists</text>
+        <line x1="205" y1="280" x2="250" y2="280" class="arrow dash"/><text x="258" y="285"><tspan class="t-m">Notifications</tspan> — fee reminders &amp; announcements to parents</text>
+        <line x1="205" y1="314" x2="250" y2="314" class="arrow dash"/><text x="258" y="319"><tspan class="t-m">Settings</tspan> — school details, logo, passwords, backup</text>
+      </g>
+    </svg>
+    <figcaption>The left menu of the software and what each button is for.</figcaption>
+  </figure>
+
+  <h3>How one fee travels from start to finish</h3>
+  <figure>
+    <svg viewBox="0 0 900 250" role="img" aria-label="Fee life cycle from fee record to paid">
+      <defs><marker id="a5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ah"/></marker></defs>
+      <rect x="10" y="20" width="200" height="90" rx="12" class="box-b"/><text x="110" y="48" text-anchor="middle" class="t-m">1. Fee is created</text><text x="110" y="70" text-anchor="middle" class="t-s">Tuition ₹5,000</text><text x="110" y="88" text-anchor="middle" class="t-s">Discount −₹500 (scholarship)</text>
+      <rect x="250" y="20" width="200" height="90" rx="12" class="box-r"/><text x="350" y="48" text-anchor="middle" class="t-m">2. Pending</text><text x="350" y="70" text-anchor="middle" class="t-s">Net fee ₹4,500</text><text x="350" y="88" text-anchor="middle" class="t-s">Nothing paid yet</text>
+      <rect x="490" y="20" width="200" height="90" rx="12" class="box-g"/><text x="590" y="48" text-anchor="middle" class="t-m">3. Partial</text><text x="590" y="70" text-anchor="middle" class="t-s">Paid ₹3,000</text><text x="590" y="88" text-anchor="middle" class="t-s">Balance ₹1,500</text>
+      <rect x="730" y="20" width="160" height="90" rx="12" class="box-gr"/><text x="810" y="48" text-anchor="middle" class="t-m">4. Paid</text><text x="810" y="70" text-anchor="middle" class="t-s">Balance ₹0 ✓</text>
+      <line x1="212" y1="65" x2="248" y2="65" class="arrow" marker-end="url(#a5)"/>
+      <line x1="452" y1="65" x2="488" y2="65" class="arrow" marker-end="url(#a5)"/>
+      <line x1="692" y1="65" x2="728" y2="65" class="arrow" marker-end="url(#a5)"/>
+      <text x="470" y="55" text-anchor="middle" class="t-s">payment</text>
+      <text x="710" y="55" text-anchor="middle" class="t-s">payment</text>
+      <!-- bar -->
+      <text x="10" y="160" class="t-m">Example: one student's tuition</text>
+      <rect x="10" y="176" width="880" height="34" rx="8" fill="var(--line)"/>
+      <rect x="10" y="176" width="587" height="34" rx="8" fill="var(--green)"/>
+      <text x="304" y="199" text-anchor="middle" class="t-s white">Paid ₹3,000</text>
+      <text x="745" y="199" text-anchor="middle" class="t-s">Still due ₹1,500</text>
+      <text x="10" y="236" class="t-s muted">Example numbers only. The software calculates all of this for every student.</text>
+    </svg>
+    <figcaption>Fee amount − discount = net fee. Net fee − payments = balance. Status changes by itself.</figcaption>
+  </figure>
+
+  <div class="grid g2">
+    <div class="card navy">
+      <h3>Money: Accounts &amp; Reports</h3>
+      <ul class="tick">
+        <li><b>Accounts</b> joins fee income (automatic) with expenses you type in, and shows the net balance.</li>
+        <li><b>Reports</b> shows pending &amp; partial fees, collection by payment method, discounts given, and class lists.</li>
+        <li>Every list page has a <b>Print</b> button with a clean letterhead.</li>
+      </ul>
+    </div>
+    <div class="card gold">
+      <h3>Settings (management only)</h3>
+      <ul class="tick">
+        <li>School name, address, phone and logo.</li>
+        <li>Change the Management, Fee Payments and Data passwords.</li>
+        <li><b>Download backup</b> — a file with all school data.</li>
+        <li>Restore from a backup if ever needed.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. ALERTS ============ -->
+<section id="alerts">
+  <h2>6. Management alerts: knowing what changed</h2>
+  <p class="lead">Management does not have to check every screen. The software keeps a <b>diary of changes</b> and tells you when something important happens.</p>
+
+  <figure>
+    <svg viewBox="0 0 900 230" role="img" aria-label="Flow: a staff action creates an alert that appears on the Dashboard bell and as a pop-up">
+      <defs><marker id="a6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ah"/></marker></defs>
+      <rect x="10" y="20" width="190" height="100" rx="12" class="box-b"/><text x="105" y="48" text-anchor="middle" class="t-m">A staff member…</text><text x="105" y="70" text-anchor="middle" class="t-s">adds a student</text><text x="105" y="88" text-anchor="middle" class="t-s">records a payment</text><text x="105" y="106" text-anchor="middle" class="t-s">deletes a record</text>
+      <rect x="260" y="20" width="190" height="100" rx="12" class="box-g"/><text x="355" y="48" text-anchor="middle" class="t-m">Software writes</text><text x="355" y="68" text-anchor="middle" class="t-m">a note in the diary</text><text x="355" y="92" text-anchor="middle" class="t-s muted">(saved with your data)</text>
+      <rect x="510" y="20" width="190" height="100" rx="12" class="box-gr"/><text x="605" y="48" text-anchor="middle" class="t-m">🔔 Bell on Dashboard</text><text x="605" y="70" text-anchor="middle" class="t-s">Recent activity list</text><text x="605" y="88" text-anchor="middle" class="t-s">Newest first</text>
+      <rect x="750" y="20" width="140" height="100" rx="12" class="box"/><text x="820" y="52" text-anchor="middle" class="t-m">Pop-up</text><text x="820" y="72" text-anchor="middle" class="t-s">on your device</text><text x="820" y="90" text-anchor="middle" class="t-s muted">(if allowed)</text>
+      <line x1="202" y1="70" x2="258" y2="70" class="arrow" marker-end="url(#a6)"/>
+      <line x1="452" y1="70" x2="508" y2="70" class="arrow" marker-end="url(#a6)"/>
+      <line x1="702" y1="70" x2="748" y2="70" class="arrow dash" marker-end="url(#a6)"/>
+      <text x="10" y="170" class="t-m">Every two weeks the software also adds a "Pending balance" summary:</text>
+      <rect x="10" y="184" width="880" height="30" rx="8" class="box-r"/><text x="450" y="204" text-anchor="middle" class="t-s">"Total outstanding fees ₹__ and __ students still owe money"</text>
+    </svg>
+    <figcaption>Alerts are for Management only. The bell is on the Dashboard.</figcaption>
+  </figure>
+
+  <h3>What gets recorded</h3>
+  <div class="pill-row">
+    <span class="badge">🧑‍🎓 Student enrolled</span>
+    <span class="badge">🧾 Fees billed</span>
+    <span class="badge">💵 Fees collected</span>
+    <span class="badge">⏰ Pending balance (every 2 weeks)</span>
+    <span class="badge">🗑 Fee deleted</span>
+    <span class="badge">🗑 Payment deleted</span>
+    <span class="badge">🗑 Student deleted</span>
+  </div>
+  <p>Open the <b>⚙ gear</b> next to <i>Recent activity</i> to switch any type on or off. There is also a switch for device pop-ups; your phone will ask for permission the first time.</p>
+  <div class="note"><b>Please understand:</b> pop-ups appear while the software is open (or installed and running in the background). They are not like normal phone notifications that can wake a fully closed app. If you have not opened the software for a while, the diary is still there waiting for you.</div>
+</section>
+
+<!-- ============ 7. PARENT PORTAL ============ -->
+<section id="parents">
+  <h2>7. The Parent Portal</h2>
+  <p class="lead">A separate, simple app just for parents. It lets them check fees and read school messages without coming to the office.</p>
+
+  <h3>How a parent logs in</h3>
+  <figure>
+    <svg viewBox="0 0 900 230" role="img" aria-label="Parent opens link, enters admission number and date of birth, sees own child's page">
+      <defs><marker id="a7" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ah"/></marker></defs>
+      <rect x="10" y="30" width="190" height="110" rx="12" class="box-b"/><text x="105" y="62" text-anchor="middle" class="t-m">Parent opens</text><text x="105" y="82" text-anchor="middle" class="t-m">the school's</text><text x="105" y="102" text-anchor="middle" class="t-m">parent link</text><text x="105" y="124" text-anchor="middle" class="t-s muted">(install on phone)</text>
+      <rect x="250" y="30" width="210" height="110" rx="12" class="box-g"/><text x="355" y="58" text-anchor="middle" class="t-m">Types two things</text><rect x="270" y="70" width="170" height="26" rx="6" class="box"/><text x="355" y="88" text-anchor="middle" class="t-s">Admission No: 101</text><rect x="270" y="102" width="170" height="26" rx="6" class="box"/><text x="355" y="120" text-anchor="middle" class="t-s">Date of birth: 14-05-2012</text>
+      <rect x="510" y="30" width="170" height="110" rx="12" class="box-gr"/><text x="595" y="62" text-anchor="middle" class="t-m">Sees ONLY</text><text x="595" y="82" text-anchor="middle" class="t-m">their own child</text><text x="595" y="106" text-anchor="middle" class="t-s muted">no other students</text>
+      <rect x="730" y="30" width="160" height="110" rx="12" class="box"/><text x="810" y="60" text-anchor="middle" class="t-m">3 tabs</text><text x="810" y="82" text-anchor="middle" class="t-s">Profile</text><text x="810" y="100" text-anchor="middle" class="t-s">Fees &amp; payments</text><text x="810" y="118" text-anchor="middle" class="t-s">Notices</text>
+      <line x1="202" y1="85" x2="248" y2="85" class="arrow" marker-end="url(#a7)"/>
+      <line x1="462" y1="85" x2="508" y2="85" class="arrow" marker-end="url(#a7)"/>
+      <line x1="682" y1="85" x2="728" y2="85" class="arrow" marker-end="url(#a7)"/>
+      <text x="10" y="190" class="t-s muted">No account or password to create. The Admission No. + date of birth together work like the key.</text>
+      <text x="10" y="212" class="t-s muted">Management can see these two details on each student's profile page, to tell the parent.</text>
+    </svg>
+    <figcaption>Parents never need a username or password. Make sure every student has a date of birth saved.</figcaption>
+  </figure>
+
+  <div class="grid g2">
+    <div class="card green">
+      <h3>What parents CAN see</h3>
+      <ul class="tick">
+        <li>Their child's name, class, DOB, parents' names, phone, address</li>
+        <li>Each fee: net amount, paid, balance, and <span class="tag red">Pending</span> / <span class="tag gold">Partial</span> / <span class="tag green">Paid</span></li>
+        <li>Full list of payments made</li>
+        <li><b>Notices:</b> fee reminders and school announcements</li>
+      </ul>
+    </div>
+    <div class="card red">
+      <h3>What parents can NOT see</h3>
+      <ul class="tick cross">
+        <li>Aadhaar numbers (never sent to the Parent Portal)</li>
+        <li>Any other student</li>
+        <li>Accounts, expenses or school finances</li>
+        <li>They cannot change anything — it is read-only</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Sending messages to parents</h3>
+  <figure>
+    <svg viewBox="0 0 900 270" role="img" aria-label="Management writes a reminder or announcement, it goes to the cloud and appears in Parent Portal Notices tab">
+      <defs><marker id="a8" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ah"/></marker></defs>
+      <rect x="10" y="20" width="250" height="150" rx="12" class="box-b"/><text x="135" y="48" text-anchor="middle" class="t-m">Management → Notifications</text>
+      <rect x="26" y="62" width="218" height="40" rx="8" class="box-r"/><text x="135" y="80" text-anchor="middle" class="t-s">Fee reminder</text><text x="135" y="95" text-anchor="middle" class="t-s muted">only to those who owe</text>
+      <rect x="26" y="112" width="218" height="40" rx="8" class="box-g"/><text x="135" y="130" text-anchor="middle" class="t-s">General announcement</text><text x="135" y="145" text-anchor="middle" class="t-s muted">holiday, event, exam…</text>
+      <path d="M340 110c-20 0-30-16-22-30 6-12 22-15 33-8 6-20 34-26 49-10 11-14 40-8 43 14 22-3 34 19 21 33-5 5-9 6-15 6z" class="box-g" transform="translate(0,6)"/>
+      <text x="418" y="104" text-anchor="middle" class="t-m">Cloud</text>
+      <rect x="610" y="20" width="280" height="150" rx="14" class="box-gr"/><text x="750" y="48" text-anchor="middle" class="t-m">Parent Portal → Notices</text>
+      <rect x="628" y="62" width="244" height="40" rx="8" class="box"/><text x="750" y="86" text-anchor="middle" class="t-s">"Fee reminder: ₹1,500 due"</text>
+      <rect x="628" y="112" width="244" height="40" rx="8" class="box"/><text x="750" y="136" text-anchor="middle" class="t-s">"School closed on Friday"</text>
+      <line x1="262" y1="95" x2="318" y2="95" class="arrow" marker-end="url(#a8)"/>
+      <line x1="520" y1="95" x2="608" y2="95" class="arrow" marker-end="url(#a8)"/>
+      <text x="565" y="84" text-anchor="middle" class="t-s">instantly</text>
+      <rect x="10" y="196" width="880" height="62" rx="12" class="box-g"/>
+      <text x="26" y="222" class="t-m">Good to know</text>
+      <text x="26" y="244" class="t-s">Notices appear while the parent's app is open or installed. Parents may be asked to "Allow notifications" the first time. For extra safety, the office can also send WhatsApp.</text>
+    </svg>
+    <figcaption>Choose all parents, one class, or one student. For reminders, the software shows how much money is outstanding before you send.</figcaption>
+  </figure>
+
+  <div class="note"><b>Fee reminders only reach the right people.</b> When you choose "all" or a class, the software automatically leaves out parents who have already paid in full.</div>
+</section>
+
+<!-- ============ 8. PICTURES & GRAPHS ============ -->
+<section id="pictures">
+  <h2>8. Pictures of the numbers</h2>
+  <p class="lead">The software's <b>Reports</b> and <b>Accounts</b> pages give you the real figures. These two pictures show the <i>kind</i> of questions they answer. <b>All numbers below are examples only.</b></p>
+
+  <div class="grid g2">
+    <figure style="margin:0">
+      <svg viewBox="0 0 360 300" role="img" aria-label="Example donut chart: 60 percent paid, 25 percent partial, 15 percent pending" style="min-width:300px">
+        <text x="180" y="26" text-anchor="middle" class="t-m">Where do our fees stand?</text>
+        <g transform="rotate(-90 180 150)">
+          <circle cx="180" cy="150" r="80" fill="none" stroke="var(--green)" stroke-width="40" stroke-dasharray="301.6 502.7"/>
+          <circle cx="180" cy="150" r="80" fill="none" stroke="var(--gold)" stroke-width="40" stroke-dasharray="125.7 502.7" stroke-dashoffset="-301.6"/>
+          <circle cx="180" cy="150" r="80" fill="none" stroke="var(--red)" stroke-width="40" stroke-dasharray="75.4 502.7" stroke-dashoffset="-427.3"/>
+        </g>
+        <text x="180" y="146" text-anchor="middle" class="t-l">60%</text><text x="180" y="166" text-anchor="middle" class="t-s muted">fully paid</text>
+        <rect x="40" y="252" width="14" height="14" rx="3" fill="var(--green)"/><text x="60" y="264" class="t-s">Paid 60%</text>
+        <rect x="140" y="252" width="14" height="14" rx="3" fill="var(--gold)"/><text x="160" y="264" class="t-s">Partial 25%</text>
+        <rect x="250" y="252" width="14" height="14" rx="3" fill="var(--red)"/><text x="270" y="264" class="t-s">Pending 15%</text>
+        <text x="180" y="290" text-anchor="middle" class="t-s muted">Example</text>
+      </svg>
+    </figure>
+    <figure style="margin:0">
+      <svg viewBox="0 0 420 300" role="img" aria-label="Example bar chart of money collected and money spent for six months" style="min-width:340px">
+        <text x="210" y="26" text-anchor="middle" class="t-m">Money in vs money out (₹ thousand)</text>
+        <g stroke="var(--line)" stroke-width="1">
+          <line x1="50" y1="240" x2="410" y2="240"/><line x1="50" y1="190" x2="410" y2="190"/><line x1="50" y1="140" x2="410" y2="140"/><line x1="50" y1="90" x2="410" y2="90"/><line x1="50" y1="40" x2="410" y2="40"/>
+        </g>
+        <g class="t-s muted"><text x="42" y="244" text-anchor="end">0</text><text x="42" y="194" text-anchor="end">20</text><text x="42" y="144" text-anchor="end">40</text><text x="42" y="94" text-anchor="end">60</text><text x="42" y="44" text-anchor="end">80</text></g>
+        <!-- scale: 2.5px per thousand -->
+        <g fill="var(--green)">
+          <rect x="62" y="125" width="20" height="115" rx="3"/><rect x="122" y="105" width="20" height="135" rx="3"/><rect x="182" y="65" width="20" height="175" rx="3"/><rect x="242" y="90" width="20" height="150" rx="3"/><rect x="302" y="120" width="20" height="120" rx="3"/><rect x="362" y="100" width="20" height="140" rx="3"/>
+        </g>
+        <g fill="var(--gold)">
+          <rect x="84" y="190" width="20" height="50" rx="3"/><rect x="144" y="175" width="20" height="65" rx="3"/><rect x="204" y="165" width="20" height="75" rx="3"/><rect x="264" y="185" width="20" height="55" rx="3"/><rect x="324" y="170" width="20" height="70" rx="3"/><rect x="384" y="180" width="20" height="60" rx="3"/>
+        </g>
+        <g class="t-s"><text x="83" y="258" text-anchor="middle">Apr</text><text x="143" y="258" text-anchor="middle">May</text><text x="203" y="258" text-anchor="middle">Jun</text><text x="263" y="258" text-anchor="middle">Jul</text><text x="323" y="258" text-anchor="middle">Aug</text><text x="383" y="258" text-anchor="middle">Sep</text></g>
+        <rect x="110" y="276" width="14" height="14" rx="3" fill="var(--green)"/><text x="130" y="288" class="t-s">Fees collected</text>
+        <rect x="240" y="276" width="14" height="14" rx="3" fill="var(--gold)"/><text x="260" y="288" class="t-s">Expenses</text>
+      </svg>
+    </figure>
+  </div>
+  <p class="legend"><span>Example data only — not the school's real figures.</span></p>
+  <p>The same facts in the software appear as tables with totals: what is pending, what was collected by cash or UPI, what discounts were given, and what remains after expenses. Each can be printed.</p>
+</section>
+
+<!-- ============ 9. ROUTINES ============ -->
+<section id="routine">
+  <h2>9. A simple routine for each person</h2>
+  <div class="grid g3">
+    <div class="card navy">
+      <h3>Teacher</h3>
+      <p><span class="tag">When a child joins</span></p>
+      <ul class="tick"><li>Add the student with full details and date of birth</li><li>Check the admission number is right</li></ul>
+      <p><span class="tag">Each term</span></p>
+      <ul class="tick"><li>Print the class list and check names</li></ul>
+    </div>
+    <div class="card gold">
+      <h3>Fee collector</h3>
+      <p><span class="tag gold">Every payment</span></p>
+      <ul class="tick"><li>Search → record → print receipt</li><li>Offer the WhatsApp confirmation</li></ul>
+      <p><span class="tag gold">End of day</span></p>
+      <ul class="tick"><li>Count the cash against the Payments list</li><li>Tell Management about any mistakes</li></ul>
+    </div>
+    <div class="card green">
+      <h3>Management</h3>
+      <p><span class="tag green">Each week</span></p>
+      <ul class="tick"><li>Check the 🔔 bell for activity</li><li>Send fee reminders to those who owe</li></ul>
+      <p><span class="tag green">Each month</span></p>
+      <ul class="tick"><li><b>Download a backup</b> and keep it safe</li><li>Review Accounts and Reports</li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. SAFETY ============ -->
+<section id="safe">
+  <h2>10. Staying safe</h2>
+  <p class="lead">This software holds children's personal details, including Aadhaar numbers. A few habits keep them safe.</p>
+  <div class="grid g2">
+    <div class="card red">
+      <h3>Do</h3>
+      <ul class="tick">
+        <li>Change the starting passwords in Settings.</li>
+        <li>Log out when you leave a shared computer or phone.</li>
+        <li>Share the school sign-in only with staff who need it.</li>
+        <li>Keep the monthly backup file somewhere safe.</li>
+      </ul>
+    </div>
+    <div class="card red">
+      <h3>Don't</h3>
+      <ul class="tick cross">
+        <li>Don't tell a parent the staff password.</li>
+        <li>Don't send Aadhaar numbers on WhatsApp.</li>
+        <li>Don't use "Reset to example data" — it replaces the school's records. It needs a separate Data password for this reason.</li>
+        <li>Don't give the Parent Portal login to anyone but that child's parent.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Two sign-in steps</h3>
+  <figure>
+    <svg viewBox="0 0 900 140" role="img" aria-label="Step 1 cloud sign-in with email and password, Step 2 choose role">
+      <defs><marker id="a9" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ah"/></marker></defs>
+      <rect x="10" y="20" width="270" height="100" rx="12" class="box-b"/><text x="145" y="50" text-anchor="middle" class="t-m">Step 1: School sign-in</text><text x="145" y="72" text-anchor="middle" class="t-s">Email + password</text><text x="145" y="92" text-anchor="middle" class="t-s muted">"Who may open the school data?"</text>
+      <rect x="315" y="20" width="270" height="100" rx="12" class="box-g"/><text x="450" y="50" text-anchor="middle" class="t-m">Step 2: Choose your role</text><text x="450" y="72" text-anchor="middle" class="t-s">Teacher · Fee Payments · Management</text><text x="450" y="92" text-anchor="middle" class="t-s muted">"What may you do inside?"</text>
+      <rect x="620" y="20" width="270" height="100" rx="12" class="box-gr"/><text x="755" y="50" text-anchor="middle" class="t-m">Work safely ✓</text><text x="755" y="72" text-anchor="middle" class="t-s">Only the tabs for your job</text>
+      <line x1="282" y1="70" x2="313" y2="70" class="arrow" marker-end="url(#a9)"/>
+      <line x1="587" y1="70" x2="618" y2="70" class="arrow" marker-end="url(#a9)"/>
+    </svg>
+    <figcaption>The first sign-in protects the data on the internet. The second controls what each person can do.</figcaption>
+  </figure>
+
+  <div class="note"><b>Honest limits:</b> the role passwords inside the software are a convenience for a small staff team — they are not bank-level security. The Parent Portal uses Admission No. + date of birth, which is easy for parents but could be guessed by someone who knows both. Treat admission numbers and birth dates as private.</div>
+</section>
+
+<!-- ============ 11. FAQ ============ -->
+<section id="faq">
+  <h2>11. Common questions</h2>
+  <details><summary>I entered a payment on my phone — will Management see it on their computer?</summary><p>Yes, as long as the green "Cloud sync on" badge is showing. It usually appears within moments, with no refresh needed.</p></details>
+  <details><summary>The internet is slow in the village. Can I still use it?</summary><p>Once the software has been opened once, the app screens load from your device. Data changes need the internet to reach the shared cloud, so if the signal is poor, wait for it to come back before relying on the sync badge.</p></details>
+  <details><summary>A parent says they cannot log into the Parent Portal.</summary><p>Check the Admission No. and date of birth on the student's profile page. If the date of birth is missing or wrong, Management should correct it, then the parent can try again.</p></details>
+  <details><summary>I pressed "Send WhatsApp" but the parent did not get it.</summary><p>The software only opens WhatsApp with the message ready. You must press Send in WhatsApp. Also check the phone number saved for the student.</p></details>
+  <details><summary>We lost or changed a phone / computer. Is the data gone?</summary><p>No. With cloud sync the data is stored online, and Management also keeps monthly backup files. Sign in on the new device and everything appears.</p></details>
+  <details><summary>Can a teacher see fees?</summary><p>No. The Fees, Payments and Accounts tabs are hidden for teachers.</p></details>
+  <details><summary>Who do I ask for help?</summary><p>Ask the school Management first. They can contact the person who set up the software if something needs fixing.</p></details>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">Ikhlas School Manager · Simple guide for teachers, fee collector and management<br>The software's own copyright line reads &copy; 2026 Naseer ISM WEB.</div>
+</footer>
+
+<button class="printbtn" onclick="window.print()" aria-label="Print or save this guide as PDF">🖨 Print / Save PDF</button>
+
+</body>
+</html>
